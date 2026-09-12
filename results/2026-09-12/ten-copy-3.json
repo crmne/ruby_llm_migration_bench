@@ -1,0 +1,89 @@
+{
+  "profile": "ten",
+  "mode": "copy",
+  "repeat": 3,
+  "database": "rllm_bench_copy_3_f7402f",
+  "phases": {
+    "source_audit": 4.2475196479999795,
+    "legacy_audit": 3.407257245999972,
+    "prepare": 0.8344054609997329,
+    "backfill": 136.21743967100065,
+    "finish": 3.8107952709997335,
+    "target_audit": 7.415451978000419
+  },
+  "passed": true,
+  "seed": {
+    "chats": 100000,
+    "profile": "ten",
+    "messages": 1000000,
+    "max_length": 10,
+    "min_length": 10,
+    "mean_length": 10.0,
+    "percentiles": "{10,10,10,10}",
+    "seed_seconds": 19.60150481399978,
+    "payload_bytes": 256,
+    "database_bytes": 674914819,
+    "message_table_bytes": 628858880
+  },
+  "ruby": "ruby 4.0.6 (2026-07-14 revision 03b6d3f889) +PRISM [x86_64-linux]",
+  "active_record": "8.1.3.1",
+  "postgresql": "PostgreSQL 15.19 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 16.2.1 20260810, 64-bit",
+  "database_bytes_before": 675093863,
+  "settings": {
+    "fsync": "on",
+    "synchronous_commit": "on",
+    "full_page_writes": "on",
+    "autovacuum": "on",
+    "shared_buffers": "2GB",
+    "work_mem": "32MB",
+    "maintenance_work_mem": "512MB"
+  },
+  "gem_commit": "e5827a01a4226a1b4bbf28a4f42c0ff252918443",
+  "machine": {
+    "platform": "x86_64-linux",
+    "cpu": "AMD Ryzen 5 7500F 6-Core Processor",
+    "memory_kib": 65425740,
+    "filesystem": "btrfs"
+  },
+  "harness_hashes": {
+    "bin/bench": "5f8c41844b15d67174b2925722806b588d4a7fecd791597693159977682f2941",
+    "bin/report": "51b8bda8b5193546f2ea39444f79de959e0740ec046b654ad848e97ef3da3a8c",
+    "lib/migration_bench.rb": "bcac32486b82beb03b3860c39248b60b5c7b65b246d859331824356c22a49f1c",
+    "lib/migration_bench/cluster.rb": "679a998b6c548b6a23d3bcb531dbe2b84637272d765cd7d210b579feecebd0e9",
+    "lib/migration_bench/report.rb": "e9aaa0f11223f9f02b91eca9b20820d52ae9b34572a4331094e0c9687392051c",
+    "lib/migration_bench/seed.rb": "85ca1d66c902a631dc0a1b47ecb9c20aba824a4b5b38f80833bbf3206a1af123",
+    "lib/migration_bench/trial.rb": "8a7568d14135f6b89fc05726d5f710a524d98bc2fdef3e6cefb71df75d0f242b"
+  },
+  "batch_size": 10000,
+  "concurrent_writers": false,
+  "migration_hashes": {
+    "prepare": "e71162dba58b4c4b0477c90b5de0a738dc8eaddb831e0bad5435bbfa3de21863",
+    "backfill": "1e47d76f2c2620ab48a0827395c9b763503db516500eae54b688d5b69152f00f",
+    "finish": "53026c53c36af5817ed293ceafd57b3567eb220099ebe391ca31b80f751765be"
+  },
+  "total_seconds": 140.86271314199985,
+  "downtime_seconds": 3.8107952709997335,
+  "fingerprints": {
+    "messages": {
+      "count": 1000000,
+      "xor_hash": "-9190520418732728910",
+      "sum_hash": "-1020963309846071370566"
+    },
+    "chats": {
+      "count": 100000,
+      "xor_hash": "-72374944723068987",
+      "sum_hash": "-1065444655712139646470"
+    },
+    "tools": {
+      "count": 100000,
+      "xor_hash": "4982356617989525679",
+      "sum_hash": "-1909159533324496311045"
+    },
+    "usages": {
+      "count": 500000,
+      "xor_hash": "7015259701246746647",
+      "sum_hash": "-7150282914327005918729"
+    }
+  },
+  "database_bytes_after": 1697865063
+}

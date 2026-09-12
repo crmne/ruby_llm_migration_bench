@@ -17,4 +17,19 @@ class ProvenanceTest < Minitest::Test
       end
     end
   end
+
+  def test_standalone_run_reproduces_original_data_and_migrations
+    paths = Dir[File.join(ROOT, "../2026-09-12/ten-*.json")]
+    assert_equal 6, paths.size
+    paths.each do |path|
+      row = JSON.parse(File.read(path))
+      baseline = JSON.parse(File.read(File.join(ROOT, "ten-#{row.fetch("mode")}-1.json")))
+      assert_equal true, row.fetch("passed")
+      assert_equal baseline.fetch("fingerprints"), row.fetch("fingerprints")
+      assert_equal baseline.fetch("migration_hashes"), row.fetch("migration_hashes")
+      assert_equal baseline.fetch("gem_commit"), row.fetch("gem_commit")
+      assert_equal 10_000, row.fetch("batch_size")
+      assert_equal false, row.fetch("concurrent_writers")
+    end
+  end
 end

@@ -13,6 +13,8 @@ These are PostgreSQL medians from three runs per mode, recorded September 11, 20
 
 This is a measured trade-off, not a production downtime prediction. Use it alongside the [RubyLLM upgrade guide](https://rubyllm.com/next/upgrading/).
 
+A [full verification run of this standalone harness](results/2026-09-12/README.md) reproduced the same data and migration source hashes, with the same overall trade-off. Its results are recorded separately from the headline measurements.
+
 ## What the clocks measure
 
 - **Total migration time:** prepare, backfill and finish, including their built-in validation.

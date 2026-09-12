@@ -1,0 +1,77 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "optparse"
+require_relative "../lib/migration_bench"
+
+options = {chats: 100_000, repeats: 3, shared_buffers: "2GB"}
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: bundle exec ruby bin/bench [options]"
+  opts.on("--chats N", Integer, "Synthetic chats, each with 10 messages (default: 100000)") { |n| options[:chats] = n }
+  opts.on("--repeats N", Integer, "Trials per mode (default: 3)") { |n| options[:repeats] = n }
+  opts.on("--shared-buffers SIZE", "PostgreSQL shared buffers (default: 2GB)") { |s| options[:shared_buffers] = s }
+  opts.on("--output PATH", "New output directory; refuses existing paths") { |p| options[:output] = File.expand_path(p) }
+  opts.on("-h", "--help", "Show help") {
+    puts opts
+    exit
+  }
+end
+parser.parse!
+abort parser.to_s unless ARGV.empty?
+abort "Chats and repeats must be positive" unless options[:chats].positive? && options[:repeats].positive?
+MigrationBench.gem_commit
+
+output = options[:output] || File.join(MigrationBench::ROOT, "results/local", "#{Time.now.utc.strftime("%Y%m%dT%H%M%SZ")}-#{SecureRandom.hex(3)}")
+FileUtils.mkdir_p(File.dirname(output))
+Dir.mkdir(output)
+File.write(File.join(output, "run.json"), JSON.pretty_generate(options.merge(
+  gem_commit: MigrationBench.gem_commit, started_at: Time.now.utc.iso8601,
+  batch_size: MigrationBench::BATCH_SIZE, concurrent_writers: false
+)))
+
+cluster = MigrationBench::Cluster.new(output:, shared_buffers: options[:shared_buffers])
+complete = false
+begin
+  cluster.start
+  seed = "rllm_bench_ten"
+  cluster.create_database(seed)
+  ActiveRecord::Base.establish_connection(cluster.connection_options(seed))
+  stats = MigrationBench::Seed.new(ActiveRecord::Base.connection).run(chats: options[:chats])
+  MigrationBench.log(:seed_complete, **stats)
+  ActiveRecord::Base.connection_pool.disconnect!
+
+  1.upto(options[:repeats]) do |repeat|
+    modes = repeat.even? ? %w[copy rename] : %w[rename copy]
+    modes.each do |mode|
+      pid = fork do
+        MigrationBench::Trial.new(cluster:, output:, seed:, mode:, repeat:).run
+        exit! 0
+      rescue StandardError, Interrupt => error
+        warn error.full_message
+        exit! 1
+      end
+      begin
+        _, status = Process.wait2(pid)
+        pid = nil
+        raise "Trial failed: #{mode}/#{repeat}; inspect #{output}" unless status.success?
+      ensure
+        if pid
+          begin
+            Process.kill("TERM", pid)
+            Process.wait(pid)
+          rescue Errno::ESRCH, Errno::ECHILD
+            # The child already exited.
+          end
+        end
+      end
+    end
+  end
+  report = MigrationBench::Report.new(Dir[File.join(output, "ten-*.json")])
+  report.validate!(repeats: options[:repeats])
+  File.write(File.join(output, "summary.md"), report.markdown)
+  puts report.markdown
+  puts "Results: #{output}"
+  complete = true
+ensure
+  cluster.close(discard: complete)
+end

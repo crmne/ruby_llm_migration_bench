@@ -1,0 +1,72 @@
+{
+  "profile": "ten",
+  "mode": "copy",
+  "repeat": 3,
+  "database": "rllm_current_ten_copy_3_56e034",
+  "phases": {
+    "source_audit": 4.347031471999799,
+    "legacy_audit": 3.4199448939980357,
+    "prepare": 0.9007121949980501,
+    "backfill": 132.54174367199812,
+    "finish": 3.7883940110004914,
+    "target_audit": 7.417235241999151
+  },
+  "passed": true,
+  "seed": {
+    "chats": 100000,
+    "profile": "ten",
+    "messages": 1000000,
+    "max_length": 10,
+    "min_length": 10,
+    "mean_length": 10.0,
+    "percentiles": "{10,10,10,10}",
+    "seed_seconds": 19.667064487999596,
+    "payload_bytes": 256,
+    "database_bytes": 674939395,
+    "message_table_bytes": 628867072
+  },
+  "ruby": "ruby 4.0.6 (2026-07-14 revision 03b6d3f889) +PRISM [x86_64-linux]",
+  "active_record": "8.1.3.1",
+  "postgresql": "PostgreSQL 15.19 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 16.2.1 20260810, 64-bit",
+  "database_bytes_before": 675118439,
+  "settings": {
+    "fsync": "on",
+    "synchronous_commit": "on",
+    "full_page_writes": "on",
+    "autovacuum": "on",
+    "shared_buffers": "2GB",
+    "work_mem": "32MB",
+    "maintenance_work_mem": "512MB"
+  },
+  "gem_commit": "e5827a01a4226a1b4bbf28a4f42c0ff252918443",
+  "migration_hashes": {
+    "prepare": "e71162dba58b4c4b0477c90b5de0a738dc8eaddb831e0bad5435bbfa3de21863",
+    "backfill": "1e47d76f2c2620ab48a0827395c9b763503db516500eae54b688d5b69152f00f",
+    "finish": "53026c53c36af5817ed293ceafd57b3567eb220099ebe391ca31b80f751765be"
+  },
+  "total_seconds": 137.23093566600073,
+  "downtime_seconds": 3.7883940110004914,
+  "fingerprints": {
+    "messages": {
+      "count": 1000000,
+      "xor_hash": "-9190520418732728910",
+      "sum_hash": "-1020963309846071370566"
+    },
+    "chats": {
+      "count": 100000,
+      "xor_hash": "-72374944723068987",
+      "sum_hash": "-1065444655712139646470"
+    },
+    "tools": {
+      "count": 100000,
+      "xor_hash": "4982356617989525679",
+      "sum_hash": "-1909159533324496311045"
+    },
+    "usages": {
+      "count": 500000,
+      "xor_hash": "7015259701246746647",
+      "sum_hash": "-7150282914327005918729"
+    }
+  },
+  "database_bytes_after": 1696996711
+}

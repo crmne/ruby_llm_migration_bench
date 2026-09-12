@@ -1,0 +1,29 @@
+name: Verify benchmark
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PG_BINDIR: /usr/lib/postgresql/16/bin
+      TMPDIR: ${{ runner.temp }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Install PostgreSQL server tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-16
+      - name: Validate results and safety guards
+        run: bundle exec ruby -Itest -e 'Dir["test/*_test.rb"].sort.each { |file| require_relative file }'
+      - name: Recalculate recorded summary
+        run: ruby bin/report
+      - name: Exercise both generated migrations
+        run: bundle exec ruby bin/bench --chats 1000 --repeats 1 --shared-buffers 256MB

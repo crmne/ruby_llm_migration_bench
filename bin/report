@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "json"
+require_relative "../lib/migration_bench/report"
+
+directory = ARGV.shift || File.expand_path("../results/2026-09-11", __dir__)
+abort "Usage: ruby bin/report [results_directory]" unless ARGV.empty?
+report = MigrationBench::Report.new(Dir[File.join(directory, "ten-*.json")])
+report.validate!
+puts report.markdown

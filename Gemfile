@@ -7,4 +7,4 @@ gem "ruby_llm", git: "https://github.com/crmne/ruby_llm.git",
 gem "activerecord", "8.1.4.1"
 gem "railties", "8.1.4.1"
 gem "pg", "1.7.0"
-gem "minitest", "~> 5.25"
+gem "minitest", "~> 6.0"
